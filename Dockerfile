@@ -1,23 +1,21 @@
-# Use an official Python image as the base image
+# Use the official Python image as a base
 FROM python:3.10-slim
 
 # Set the working directory in the container
 WORKDIR /app
 
-# Copy the requirements.txt file (outside of app folder) into the container
-COPY requirements.txt /app
+# Copy only the app folder into the container
+COPY app /app
 
-# Install Python dependencies from requirements.txt
-RUN pip install --no-cache-dir -r requirements.txt
+# Install the required Python dependencies
+RUN pip install --no-cache-dir -r /app/requirements.txt
 
-# Now copy the entire project directory (including app) into the container
-COPY . /app
-
-# Set the FLASK_APP environment variable
-ENV FLASK_APP=app.app
-
-# Expose the port Flask will run on
+# Expose the Flask app's default port
 EXPOSE 5000
 
-# Command to run the Flask app
-CMD [ "python3", "-m", "flask", "run", "--host=0.0.0.0" ]
+# Set the environment variable for Flask
+ENV FLASK_APP=main.py
+ENV FLASK_RUN_HOST=0.0.0.0
+
+# Command to run the Flask application
+CMD ["flask", "run"]
