@@ -1,14 +1,8 @@
-version: '3.10'
-
 services:
-  app:
-    image: puskr99/car-price
-    build:
-      context: .
+  flask-app:
+    image: puskr99/car-price-a2:latest
     ports:
       - "5000:5000"
     environment:
-      FLASK_APP: app.app
-    volumes:
-      - .:/app
-    command: ["python3", "-m", "flask", "run", "--host=0.0.0.0"]
+      FLASK_APP: app.py
+      FLASK_RUN_HOST: 0.0.0.0
