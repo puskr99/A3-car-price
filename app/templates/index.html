@@ -29,13 +29,33 @@
             margin-bottom: 10px;
         }
 
+        .info-section {
+            background-color: #eaf8f4;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-left: 6px solid #27ae60;
+            border-radius: 8px;
+        }
+
+        .info-section h2 {
+            color: #27ae60;
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .info-section p {
+            margin: 0;
+            color: #333;
+            line-height: 1.8;
+        }
+
         .instructions {
             margin-bottom: 30px;
         }
 
         .instructions h2 {
             font-size: 18px;
-            color: #27ae60;
+            color: #3498db;
             margin-bottom: 7px;
         }
 
@@ -56,7 +76,6 @@
             gap: 20px;
         }
 
-        /* Style for two-column layout */
         .form-row {
             display: flex;
             justify-content: space-between;
@@ -102,7 +121,6 @@
             transform: scale(1.02);
         }
 
-        /* Layout for Submit button and Result section */
         .form-actions {
             display: flex;
             justify-content: space-between;
@@ -112,14 +130,14 @@
         }
 
         .submit {
-            width: 40%; /* Make the submit button take up nearly half the width */
+            width: 40%;
             padding: 10px 0;
             font-size: 16px;
             border-radius: 6px;
         }
 
         .result {
-            flex: 1; /* Allow result to take up the remaining space */
+            flex: 1;
             text-align: center;
         }
 
@@ -139,6 +157,18 @@
     <div class="container">
         <h1>Car Price Prediction</h1>
 
+        <div class="info-section">
+            <h2>Exciting News: A New Custom Linear Regression Prediction Model!</h2>
+            <p>
+                We’re thrilled to introduce our new prediction model! This advanced model offers:
+            </p>
+            <ul>
+                <li><strong>Custom Model:</strong> Model coded from scratch.</li>
+                <li><strong>Improved Insights:</strong> More detailed analysis for better decision-making.</li>
+            </ul>
+            <p>Try the new model by clicking "Predict (New)" below!</p>
+        </div>
+
         <div class="instructions">
             <h2>Instructions</h2>
             <ul>
@@ -154,7 +184,7 @@
                 <div class="form-section">
                     <label for="car_brand">Car Brand:</label>
                     <select id="car_brand" name="car_brand" required>
-                        <!-- <option value="" disabled selected>Select a brand</option> -->
+                        <option value="" selected disabled>Select a model</option>
                         {% for brand in car_brands %}
                             <option value="{{ brand }}" {% if selected_data.get('car_brand') == brand %}selected{% endif %}>
                                 {{ brand }}
@@ -166,14 +196,15 @@
                 <div class="form-section">
                     <label for="bought_year">Manufactured Year:</label>
                     <select id="bought_year" name="bought_year" required>
-                        <!-- <option value="" disabled selected>Select year</option> -->
+                        <option value="" selected disabled>Select a year</option>
                         {% for year in range(2024, 1980, -1) %}
-                            <option value="{{ year }}" {% if selected_data.get('bought_year')|int == year %}selected{% endif %}>
+                            <option value="{{ year }}" {% if selected_data.get('bought_year') == year %}selected{% endif %}>
                                 {{ year }}
                             </option>
                         {% endfor %}
                     </select>
                 </div>
+                
             </div>
 
             <div class="form-row">
@@ -204,22 +235,28 @@
                 </div>
             </div>
 
-            <!-- Submit button and Result are aligned here -->
             <div class="form-actions">
-                <button type="submit" class="submit">Submit</button>
-
-                <div class="result">
-                    {% if selling_price %}
-                        {% if selling_price != -1 %}
-                            <p><strong>The predicted selling price is: ${{ '{:,.2f}'.format(selling_price) }}</strong></p>
-                        {% else %}
-                            <p><strong>Couldn't predict the price. Please try again.</strong></p>
-                        {% endif %}
-                    {% endif %}
-                </div>
+                <button type="submit" class="submit" onclick="setFormAction('/a1')">Predict (Old)</button>
+                <button type="submit" class="submit" onclick="setFormAction('/a2')">Predict (New)</button>
             </div>
 
+            <div class="result">
+                {% if selling_price %}
+                    {% if selling_price != -1 %}
+                        <p><strong>The predicted selling price is: ${{ '{:,.2f}'.format(selling_price) }}</strong></p>
+                    {% else %}
+                        <p><strong>Couldn't predict the price. Please try again.</strong></p>
+                    {% endif %}
+                {% endif %}
+            </div>
         </form>
     </div>
+
+    <script>
+        function setFormAction(action) {
+            const form = document.querySelector('form');
+            form.action = action;
+        }
+    </script>
 </body>
 </html>
