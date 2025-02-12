@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request
 import numpy as np
+import cloudpickle
 import joblib
 
 app = Flask(__name__)
@@ -50,7 +51,8 @@ car_brands_encoded = le.fit_transform(car_brands)
 # transmission_encoded = le.fit_transform(transmission)
 # seller_type_encoded = le.fit_transform(seller_type)
 
-predictor = joblib.load("./model/car_price_predictor")
+with open("../app/model/car_price_predictor", "rb") as f:
+    predictor = cloudpickle.load(f)
 
 # Later, load the scaler when making predictions
 scaler_fit_model = joblib.load("./model/scaler.pkl")
