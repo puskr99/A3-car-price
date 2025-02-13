@@ -1,0 +1,15 @@
+artifact_uri: file:///home/puskr/Desktop/Machine%20Learning/A2-car-price/code/mlruns/0/11c1f8e9545c470a89623a9422e81511/artifacts
+end_time: 1739453065653
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 11c1f8e9545c470a89623a9422e81511
+run_name: method-mini_batch-lr-0.01-reg-LinearRegression-weight-zeros-momemtum-0.3-degree-None
+run_uuid: 11c1f8e9545c470a89623a9422e81511
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1739453062422
+status: 3
+tags: []
+user_id: puskr

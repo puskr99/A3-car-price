@@ -1,0 +1,15 @@
+artifact_uri: file:///home/puskr/Desktop/Machine%20Learning/A2-car-price/code/mlruns/0/1958bcb30ff148c68387ad5799a2a5f7/artifacts
+end_time: 1739449392762
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 1958bcb30ff148c68387ad5799a2a5f7
+run_name: Fold-4
+run_uuid: 1958bcb30ff148c68387ad5799a2a5f7
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1739449392613
+status: 3
+tags: []
+user_id: puskr

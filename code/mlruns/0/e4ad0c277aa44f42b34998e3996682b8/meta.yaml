@@ -1,0 +1,15 @@
+artifact_uri: file:///home/puskr/Desktop/Machine%20Learning/A2-car-price/code/mlruns/0/e4ad0c277aa44f42b34998e3996682b8/artifacts
+end_time: 1739449395915
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: e4ad0c277aa44f42b34998e3996682b8
+run_name: method-mini_batch-lr-0.01-reg-Lasso
+run_uuid: e4ad0c277aa44f42b34998e3996682b8
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1739449392039
+status: 3
+tags: []
+user_id: puskr
