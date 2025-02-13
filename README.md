@@ -5,15 +5,7 @@
 
 ---
 
-### This is a car-price prediction project done using machine learning algorithms. Below are some snapshots of the implementation:
+A new custom linear regression model has been coded and implemented for the car price prediction.It is the continuation from the model A1.
 
-#### Locally hosted website implementing the model.
-![alt text](snapshots/1.png)
-
-
-#### 1. Prediction using random data 1 for Maruti brand.
-![alt text](snapshots/2.png)
-
-
-#### 2. Prediction using random data 2 for Toyota brand.
-![alt text](snapshots/3.png)
+The model is live at:
+##### https://st125098.ml.brain.cs.ait.ac.th/s
