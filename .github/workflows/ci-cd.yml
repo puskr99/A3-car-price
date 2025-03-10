@@ -50,8 +50,7 @@ jobs:
         docker push puskr99/a3-car-app:latest
 
     - name: Deploy to Server
-      run: |
-        ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
+      run:
         docker pull puskr99/a3-car-app:latest
         docker stop a3-car-app || true
         docker rm a3-car-app || true
