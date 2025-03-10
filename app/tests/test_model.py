@@ -4,7 +4,7 @@ import pandas as pd
 
 
 def test_model():
-    model_path = "./model/A1-car_price_predictor"
+    model_path = "app/model/A1-car_price_predictor"
 
     assert os.path.exists(model_path), f"Model file not found: {model_path}"
 
