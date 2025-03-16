@@ -37,7 +37,7 @@ def index():
         selected_data={}
     )
 
-@app.route('/a2', methods=['GET', 'POST'])
+@app.route('/a3', methods=['GET', 'POST'])
 def car_price_prediction_a2():
     form_datas = {}
     pred_selling_price = None

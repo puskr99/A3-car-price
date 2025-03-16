@@ -151,7 +151,7 @@
             </ul>
         </div>
 
-        <form method="post" action="/a2">
+        <form method="post" action="/a3">
 
             <label for="bought_year">Manufactured Year:</label>
             <select id="bought_year" name="bought_year" required>
@@ -206,5 +206,18 @@
             </div>
         </form>
     </div>
+
+    <script>
+        window.onload = function() {
+            // Only scroll if selling_price is defined and not -1 (your error case)
+            {% if selling_price is defined and selling_price != -1 %}
+                window.scrollTo({
+                    top: document.body.scrollHeight,
+                    behavior: 'smooth'
+                });
+            {% endif %}
+        }
+    </script>
+    
 </body>
 </html>
