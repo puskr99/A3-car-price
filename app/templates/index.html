@@ -209,7 +209,7 @@
 
     <script>
         window.onload = function() {
-            // Only scroll if selling_price is defined and not -1 (your error case)
+            // Only scroll if selling_price is defined and not -1 
             {% if selling_price is defined and selling_price != -1 %}
                 window.scrollTo({
                     top: document.body.scrollHeight,
