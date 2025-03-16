@@ -5,6 +5,4 @@
 
 ---
 
-A new custom linear regression model has been coded and implemented for the car price prediction.It is the continuation from the model A1.
-
-The model is live at **https://st125098.ml.brain.cs.ait.ac.th/**
+A new custom logistic regression model has been coded and implemented for the car price class prediction.It is the continuation from the model A2.
