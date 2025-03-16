@@ -5,191 +5,164 @@ import joblib
 
 app = Flask(__name__)
 
-# owner_mapping = {
-#     'First Owner': 1,
-#     'Second Owner': 2,
-#     'Third Owner': 3,
-#     'Fourth & Above Owner': 4
-# }
+# Car brands for dropdown (not part of X, just for UI)
+car_brands = ["Low", "Mid", "High"]
 
-car_brands = [
-    "Maruti", "Skoda", "Honda", "Hyundai", "Toyota", "Ford", "Renault", 
-    "Mahindra", "Tata", "Chevrolet", "Fiat", "Datsun", "Jeep", "Mercedes-Benz", 
-    "Mitsubishi", "Audi", "Volkswagen", "BMW", "Nissan", "Lexus", "Jaguar", 
-    "Land", "MG", "Volvo", "Daewoo", "Kia", "Force", "Ambassador", "Ashok", 
-    "Isuzu", "Opel", "Peugeot"
-]
+# Fuel options for dropdown
+fuel_options = ["Petrol", "Diesel"]
 
-# owner = ["First Owner", "Second Owner", "Third Owner", "Fourth & Above Owner"]
-
-# fuel = ["Petrol", "Diesel"]
-
+# Ranges for form validation
 bought_year_range = [1980, 2024]
-
-# transmission = ["Manual", "Automatic"]
-
 max_power_range = [1, 99999]
-
-# seats_range = [2, 14]
-
 engine_cc_range = [1, 99999]
-
 mileage_range = [1, 999]
 
-# seller_type = ['Individual', 'Dealer', 'Trustmark Dealer']
-
-
-from sklearn.preprocessing import LabelEncoder
-car_brands_encoded = []
-# fuel_encoded = []
-# transmission_encoded = []
-# seller_type_encoded = []
-
-le = LabelEncoder()
-car_brands_encoded = le.fit_transform(car_brands)
-# fuel_encoded = le.fit_transform(fuel)
-# transmission_encoded = le.fit_transform(transmission)
-# seller_type_encoded = le.fit_transform(seller_type)
-
+# Load models and scaler
 with open("../app/model/car_price_predictor", "rb") as f:
     predictor_a2 = cloudpickle.load(f)
 
-# Later, load the scaler when making predictions
 scaler_fit_model = joblib.load("./model/scaler.pkl")
-
 predictor_a1 = joblib.load("./model/A1-car_price_predictor")
-
 
 @app.route("/")
 def index():
     return render_template(
         'index.html',
-        car_brands = car_brands,
-        # owner = owner,
-        # fuel = fuel,
-        bought_year_range = bought_year_range,
-        # transmission = transmission,
-        max_power_range = max_power_range,
-        # seller_type = seller_type,
-        mileage_range = mileage_range,
-        # seats_range = seats_range,
-        engine_cc_range = engine_cc_range,
-        selected_data = {}
+        car_brands=car_brands,
+        fuel=fuel_options,
+        bought_year_range=bought_year_range,
+        max_power_range=max_power_range,
+        mileage_range=mileage_range,
+        engine_cc_range=engine_cc_range,
+        selected_data={}
     )
-
 
 @app.route('/a2', methods=['GET', 'POST'])
 def car_price_prediction_a2():
-
     form_datas = {}
     pred_selling_price = None
 
     if request.method == 'POST':
+        # Collect form data
+        car_brand = request.form.get("car_brand")
+        fuel_input = request.form.get("fuel")  # "Petrol" or "Diesel"
+
+        # Map fuel to one-hot encoded columns
+        petrol = 1 if fuel_input == "Petrol" else 0
+        diesel = 1 if fuel_input == "Diesel" else 0
+
+        Low= 1 if car_brand == "Low" else 0
+        Mid= 1 if car_brand == "Mid" else 0
+        High= 1 if car_brand == "High" else 0
+
         form_datas = {
-            "car_brand": car_brands_encoded[car_brands.index(request.form.get("car_brand"))],
-            "bought_year": request.form.get("bought_year"),
-            "km_driven": request.form.get("km_driven"),
-            # "fuel": fuel_encoded[fuel.index(request.form.get("fuel"))],
-            # "seller": seller_type_encoded[seller_type.index(request.form.get("seller"))],
-            # "transmission": transmission_encoded[transmission.index(request.form.get("transmission"))],
-            # "owner": owner_mapping[request.form.get("owner")],
-            "mileage": request.form.get("mileage"),
-            "engine": request.form.get("engine"),
-            "max_power": request.form.get("max_power"),
-            # "seats": request.form.get("seats"),
+            "year": 2025 - int(request.form.get("bought_year")),
+            "km_driven": float(request.form.get("km_driven")),
+            "mileage": float(request.form.get("mileage")),
+            "engine": float(request.form.get("engine")),
+            "max_power": float(request.form.get("max_power")),
+            "Low": Low,
+            "Mid": Mid,
+            "High": High,
+            "Petrol": petrol,
+            "Diesel": diesel
         }
 
-        pred_selling_price = get_predicted_selling_price_a2(form_datas.values())
-    
+        # Predict selling price and bin it
+        pred_selling_price = get_predicted_selling_price_a2(form_datas)
+
     return render_template(
         'index.html',
-        car_brands = car_brands,
-        # owner = owner,
-        # fuel = fuel,
-        bought_year_range = bought_year_range,
-        # transmission = transmission,
-        max_power_range = max_power_range,
-        # seller_type = seller_type,
-        mileage_range = mileage_range,
-        # seats_range = seats_range,
-        engine_cc_range = engine_cc_range,
-        selling_price = pred_selling_price,
-        selected_data = form_datas
+        car_brands=car_brands,
+        fuel=fuel_options,
+        bought_year_range=bought_year_range,
+        max_power_range=max_power_range,
+        mileage_range=mileage_range,
+        engine_cc_range=engine_cc_range,
+        selling_price=pred_selling_price,
+        selected_data=form_datas
     )
 
+def get_predicted_selling_price_a2(form_data):
+    input_data = [
+        form_data["year"],
+        form_data["km_driven"],
+        form_data["mileage"],
+        form_data["engine"],
+        form_data["max_power"],
+        form_data["Low"],
+        form_data["Mid"],
+        form_data["High"],
+        form_data["Petrol"],
+        form_data["Diesel"]
+    ]
 
-def get_predicted_selling_price_a2(p_user_data):
-    selling_price = -1
-
-    # scalar = StandardScaler()
-    reshaped_array = np.array(list(p_user_data)).reshape(1, -1)
+    reshaped_array = np.array(input_data).reshape(1, -1)
     final_data = scaler_fit_model.transform(reshaped_array)
 
     try:
         selling_price = predictor_a2.predict(final_data)
-        return np.exp(selling_price[0])
-    except:
-        selling_price = -1
+        print("Selling price", selling_price)
+        return str(selling_price[0])
+    except Exception as e:
+        print(f"Prediction error: {e}")
+        return -1
 
-    return selling_price
 
+# @app.route('/a1', methods=['GET', 'POST'])
+# def car_price_prediction_a1():
 
+#     form_datas = {}
+#     pred_selling_price = None
 
-@app.route('/a1', methods=['GET', 'POST'])
-def car_price_prediction_a1():
+#     if request.method == 'POST':
+#         form_datas = {
+#             "car_brand": car_brands_encoded[car_brands.index(request.form.get("car_brand"))],
+#             "bought_year": request.form.get("bought_year"),
+#             "km_driven": request.form.get("km_driven"),
+#             # "fuel": fuel_encoded[fuel.index(request.form.get("fuel"))],
+#             # "seller": seller_type_encoded[seller_type.index(request.form.get("seller"))],
+#             # "transmission": transmission_encoded[transmission.index(request.form.get("transmission"))],
+#             # "owner": owner_mapping[request.form.get("owner")],
+#             "mileage": request.form.get("mileage"),
+#             "engine": request.form.get("engine"),
+#             "max_power": request.form.get("max_power"),
+#             # "seats": request.form.get("seats"),
+#         }
 
-    form_datas = {}
-    pred_selling_price = None
-
-    if request.method == 'POST':
-        form_datas = {
-            "car_brand": car_brands_encoded[car_brands.index(request.form.get("car_brand"))],
-            "bought_year": request.form.get("bought_year"),
-            "km_driven": request.form.get("km_driven"),
-            # "fuel": fuel_encoded[fuel.index(request.form.get("fuel"))],
-            # "seller": seller_type_encoded[seller_type.index(request.form.get("seller"))],
-            # "transmission": transmission_encoded[transmission.index(request.form.get("transmission"))],
-            # "owner": owner_mapping[request.form.get("owner")],
-            "mileage": request.form.get("mileage"),
-            "engine": request.form.get("engine"),
-            "max_power": request.form.get("max_power"),
-            # "seats": request.form.get("seats"),
-        }
-
-        pred_selling_price = get_predicted_selling_price_a1(form_datas.values())
+#         pred_selling_price = get_predicted_selling_price_a1(form_datas.values())
     
-    return render_template(
-        'index.html',
-        car_brands = car_brands,
-        # owner = owner,
-        # fuel = fuel,
-        bought_year_range = bought_year_range,
-        # transmission = transmission,
-        max_power_range = max_power_range,
-        # seller_type = seller_type,
-        mileage_range = mileage_range,
-        # seats_range = seats_range,
-        engine_cc_range = engine_cc_range,
-        selling_price = pred_selling_price,
-        selected_data = form_datas
-    )
+#     return render_template(
+#         'index.html',
+#         car_brands = car_brands,
+#         # owner = owner,
+#         # fuel = fuel,
+#         bought_year_range = bought_year_range,
+#         # transmission = transmission,
+#         max_power_range = max_power_range,
+#         # seller_type = seller_type,
+#         mileage_range = mileage_range,
+#         # seats_range = seats_range,
+#         engine_cc_range = engine_cc_range,
+#         selling_price = pred_selling_price,
+#         selected_data = form_datas
+#     )
 
 
+# def get_predicted_selling_price_a1(p_user_data):
+#     selling_price = -1
 
-def get_predicted_selling_price_a1(p_user_data):
-    selling_price = -1
+#     # scalar = StandardScaler()
+#     reshaped_array = np.array(list(p_user_data)).reshape(1, -1)
+#     final_data = scaler_fit_model.transform(reshaped_array)
 
-    # scalar = StandardScaler()
-    reshaped_array = np.array(list(p_user_data)).reshape(1, -1)
-    final_data = scaler_fit_model.transform(reshaped_array)
+#     try:
+#         selling_price = predictor_a1.predict(final_data)
+#         return np.exp(selling_price[0])
+#     except:
+#         selling_price = -1
 
-    try:
-        selling_price = predictor_a1.predict(final_data)
-        return np.exp(selling_price[0])
-    except:
-        selling_price = -1
-
-    return selling_price
+#     return selling_price
 
 
 if __name__ == '__main__':

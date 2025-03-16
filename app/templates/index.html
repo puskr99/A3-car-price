@@ -76,29 +76,20 @@
             gap: 20px;
         }
 
-        .form-row {
-            display: flex;
-            justify-content: space-between;
-            gap: 20px;
-        }
-
-        .form-section {
-            flex: 1;
-            min-width: 45%;
-        }
-
         label {
             font-weight: bold;
             margin-bottom: 5px;
+            display: block;
         }
 
-        input, select, button {
+        input, select {
             padding: 12px 15px;
             border: 1px solid #ddd;
             border-radius: 6px;
             font-size: 15px;
             width: 100%;
             box-sizing: border-box;
+            margin-bottom: 10px;
         }
 
         input:focus, select:focus {
@@ -114,6 +105,13 @@
             border: none;
             cursor: pointer;
             transition: all 0.3s ease-in-out;
+            padding: 12px 15px;
+            border-radius: 6px;
+            font-size: 16px;
+            width: 100%;
+            max-width: 200px;
+            margin: 20px auto 0;
+            display: block;
         }
 
         button:hover {
@@ -121,24 +119,9 @@
             transform: scale(1.02);
         }
 
-        .form-actions {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 20px;
-            margin-top: 20px;
-        }
-
-        .submit {
-            width: 40%;
-            padding: 10px 0;
-            font-size: 16px;
-            border-radius: 6px;
-        }
-
         .result {
-            flex: 1;
             text-align: center;
+            margin-top: 20px;
         }
 
         .result p {
@@ -150,7 +133,6 @@
         .result p strong {
             color: #2c3e50;
         }
-
     </style>
 </head>
 <body>
@@ -158,105 +140,71 @@
         <h1>Car Price Prediction</h1>
 
         <div class="info-section">
-            <h2>Exciting News: A New Custom Linear Regression Prediction Model!</h2>
-            <p>
-                We’re thrilled to introduce our new prediction model! This advanced model offers:
-            </p>
-            <ul>
-                <li><strong>Custom Model:</strong> Model coded from scratch.</li>
-                <li><strong>Improved Insights:</strong> More detailed analysis for better decision-making.</li>
-            </ul>
-            <p>Try the new model by clicking "Predict (New)" below!</p>
-        </div>
-
+            <h2>Exciting News: Custom Logistic Regression Model!</h2>
         <div class="instructions">
             <h2>Instructions</h2>
             <ul>
                 <li>Select the car brand from the dropdown menu.</li>
                 <li>Choose the year the car was manufactured.</li>
                 <li>Enter the distance your car has driven (in kilometers).</li>
-                <li>Fill in the car’s mileage (in km per liter), engine capacity (in CC), and max power (in BHP).</li>
+                <li>Fill in the car’s mileage (in km per liter), engine capacity (in CC),fuel and max power (in BHP).</li>
             </ul>
         </div>
 
-        <form method="post" action="/">
-            <div class="form-row">
-                <div class="form-section">
-                    <label for="car_brand">Car Brand:</label>
-                    <select id="car_brand" name="car_brand" required>
-                        <option value="" selected disabled>Select a model</option>
-                        {% for brand in car_brands %}
-                            <option value="{{ brand }}" {% if selected_data.get('car_brand') == brand %}selected{% endif %}>
-                                {{ brand }}
-                            </option>
-                        {% endfor %}
-                    </select>
-                </div>
+        <form method="post" action="/a2">
 
-                <div class="form-section">
-                    <label for="bought_year">Manufactured Year:</label>
-                    <select id="bought_year" name="bought_year" required>
-                        <option value="" selected disabled>Select a year</option>
-                        {% for year in range(2024, 1980, -1) %}
-                            <option value="{{ year }}" {% if selected_data.get('bought_year') == year %}selected{% endif %}>
-                                {{ year }}
-                            </option>
-                        {% endfor %}
-                    </select>
-                </div>
-                
-            </div>
+            <label for="bought_year">Manufactured Year:</label>
+            <select id="bought_year" name="bought_year" required>
+                <option value="" selected disabled>Select a year</option>
+                {% for year in range(2024, 1980, -1) %}
+                    <option value="{{ year }}" {% if selected_data.get('bought_year') == year|string %}selected{% endif %}>
+                        {{ year }}
+                    </option>
+                {% endfor %}
+            </select>
 
-            <div class="form-row">
-                <div class="form-section">
-                    <label for="km_driven">Km Driven:</label>
-                    <input type="number" id="km_driven" name="km_driven" min="0" max="9999999" 
-                        placeholder="Enter kilometers driven" value="{{ selected_data.get('km_driven', '') }}" required>
-                </div>
+            <label for="km_driven">Km Driven:</label>
+            <input type="number" id="km_driven" name="km_driven" min="0" max="9999999" 
+                placeholder="Enter kilometers driven" value="{{ selected_data.get('km_driven', '') }}" required>
 
-                <div class="form-section">
-                    <label for="mileage">Mileage (in kmpl):</label>
-                    <input type="number" name="mileage" min="1" max="999" 
-                        placeholder="Enter mileage" value="{{ selected_data.get('mileage', '') }}" required>
-                </div>
-            </div>
+            <label for="mileage">Mileage (in kmpl):</label>
+            <input type="number" id="mileage" name="mileage" min="1" max="999" 
+                placeholder="Enter mileage" value="{{ selected_data.get('mileage', '') }}" required>
 
-            <div class="form-row">
-                <div class="form-section">
-                    <label for="engine">Engine (in CC):</label>
-                    <input type="number" name="engine" min="1" max="999999" 
-                        placeholder="Enter engine capacity" value="{{ selected_data.get('engine', '') }}" required>
-                </div>
+            <label for="engine">Engine (in CC):</label>
+            <input type="number" id="engine" name="engine" min="1" max="999999" 
+                placeholder="Enter engine capacity" value="{{ selected_data.get('engine', '') }}" required>
 
-                <div class="form-section">
-                    <label for="max_power">Max Power (in bhp):</label>
-                    <input type="number" id="max_power" name="max_power" min="1" max="99999" 
-                        placeholder="Enter max power" value="{{ selected_data.get('max_power', '') }}" required>
-                </div>
-            </div>
+            <label for="max_power">Max Power (in bhp):</label>
+            <input type="number" id="max_power" name="max_power" min="1" max="99999" 
+                placeholder="Enter max power" value="{{ selected_data.get('max_power', '') }}" required>
 
-            <div class="form-actions">
-                <button type="submit" class="submit" onclick="setFormAction('/a1')">Predict (Old)</button>
-                <button type="submit" class="submit" onclick="setFormAction('/a2')">Predict (New)</button>
-            </div>
+            <label for="car_brand">Car Brand:</label>
+            <select id="car_brand" name="car_brand" required>
+                <option value="" selected disabled>Select a brand</option>
+                {% for brand in car_brands %}
+                    <option value="{{ brand }}" {% if selected_data.get('car_brand') == brand %}selected{% endif %}>
+                        {{ brand }}
+                    </option>
+                {% endfor %}
+            </select>
+
+            <button type="submit">Predict</button>
 
             <div class="result">
                 {% if selling_price %}
                     {% if selling_price != -1 %}
-                        <p><strong>The predicted selling price is: ${{ '{:,.2f}'.format(selling_price) }}</strong></p>
+                        <p><strong>The predicted price class is: {{ selling_price }}</strong></p>
+                        <p><strong>0 -> Cheap</strong></p>
+                        <p><strong>1 -> Affordable</strong></p>
+                        <p><strong>2 -> Expensive</strong></p>
+                        <p><strong>3 -> Luxury</strong></p>
                     {% else %}
-                        <p><strong>Couldn't predict the price. Please try again.</strong></p>
+                        <p><strong>Couldn't predict the price class. Please try again.</strong></p>
                     {% endif %}
                 {% endif %}
             </div>
         </form>
     </div>
-
-    <script>
-        function setFormAction(action) {
-            const form = document.querySelector('form');
-            form.action = action;
-        }
-    </script>
 </body>
 </html>
