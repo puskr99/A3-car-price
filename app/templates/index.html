@@ -43,16 +43,6 @@
             margin-bottom: 10px;
         }
 
-        .info-section p {
-            margin: 0;
-            color: #333;
-            line-height: 1.8;
-        }
-
-        .instructions {
-            margin-bottom: 30px;
-        }
-
         .instructions h2 {
             font-size: 18px;
             color: #3498db;
@@ -74,6 +64,17 @@
             display: flex;
             flex-direction: column;
             gap: 20px;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .form-group {
+            flex: 1;
+            min-width: 0;
         }
 
         label {
@@ -133,6 +134,12 @@
         .result p strong {
             color: #2c3e50;
         }
+
+        @media (max-width: 600px) {
+            .form-row {
+                flex-direction: column;
+            }
+        }
     </style>
 </head>
 <body>
@@ -141,55 +148,75 @@
 
         <div class="info-section">
             <h2>Exciting News: Custom Logistic Regression Model!</h2>
+        </div>
+
         <div class="instructions">
             <h2>Instructions</h2>
             <ul>
                 <li>Select the car brand from the dropdown menu.</li>
                 <li>Choose the year the car was manufactured.</li>
                 <li>Enter the distance your car has driven (in kilometers).</li>
-                <li>Fill in the car’s mileage (in km per liter), engine capacity (in CC),fuel and max power (in BHP).</li>
+                <li>Fill in the car’s mileage (in km per liter), engine capacity (in CC), fuel and max power (in BHP).</li>
             </ul>
         </div>
 
         <form method="post" action="/a1">
+            <!-- Row 1: Car Brand and Manufactured Year -->
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="car_brand">Car Brand:</label>
+                    <select id="car_brand" name="car_brand" required>
+                        <option value="" selected disabled>Select a brand</option>
+                        {% for brand in car_brands.keys() %}
+                            <option value="{{ brand }}" {% if selected_data.get('car_brand') == brand %}selected{% endif %}>
+                                {{ brand }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
 
-            <label for="car_brand">Car Brand:</label>
-            <select id="car_brand" name="car_brand" required>
-                <option value="" selected disabled>Select a brand</option>
-                {% for brand in car_brands.keys() %}
-                    <option value="{{ brand }}" {% if selected_data.get('car_brand') == brand %}selected{% endif %}>
-                        {{ brand }}
-                    </option>
-                {% endfor %}
-            </select>
+                <div class="form-group">
+                    <label for="bought_year">Manufactured Year:</label>
+                    <select id="bought_year" name="bought_year" required>
+                        <option value="" selected disabled>Select a year</option>
+                        {% for year in range(2024, 1980, -1) %}
+                            <option value="{{ year }}" {% if selected_data.get('bought_year') == year|string %}selected{% endif %}>
+                                {{ year }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
 
-            <label for="bought_year">Manufactured Year:</label>
-            <select id="bought_year" name="bought_year" required>
-                <option value="" selected disabled>Select a year</option>
-                {% for year in range(2024, 1980, -1) %}
-                    <option value="{{ year }}" {% if selected_data.get('bought_year') == year|string %}selected{% endif %}>
-                        {{ year }}
-                    </option>
-                {% endfor %}
-            </select>
+            <!-- Row 2: Km Driven and Mileage -->
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="km_driven">Km Driven:</label>
+                    <input type="number" id="km_driven" name="km_driven" min="0" max="9999999" 
+                        placeholder="Enter kilometers driven" value="{{ selected_data.get('km_driven', '') }}" required>
+                </div>
 
-            <label for="km_driven">Km Driven:</label>
-            <input type="number" id="km_driven" name="km_driven" min="0" max="9999999" 
-                placeholder="Enter kilometers driven" value="{{ selected_data.get('km_driven', '') }}" required>
+                <div class="form-group">
+                    <label for="mileage">Mileage (in kmpl):</label>
+                    <input type="number" id="mileage" name="mileage" min="1" max="999" 
+                        placeholder="Enter mileage" value="{{ selected_data.get('mileage', '') }}" required>
+                </div>
+            </div>
 
-            <label for="mileage">Mileage (in kmpl):</label>
-            <input type="number" id="mileage" name="mileage" min="1" max="999" 
-                placeholder="Enter mileage" value="{{ selected_data.get('mileage', '') }}" required>
+            <!-- Row 3: Engine and Max Power -->
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="engine">Engine (in CC):</label>
+                    <input type="number" id="engine" name="engine" min="1" max="999999" 
+                        placeholder="Enter engine capacity" value="{{ selected_data.get('engine', '') }}" required>
+                </div>
 
-            <label for="engine">Engine (in CC):</label>
-            <input type="number" id="engine" name="engine" min="1" max="999999" 
-                placeholder="Enter engine capacity" value="{{ selected_data.get('engine', '') }}" required>
-
-            <label for="max_power">Max Power (in bhp):</label>
-            <input type="number" id="max_power" name="max_power" min="1" max="99999" 
-                placeholder="Enter max power" value="{{ selected_data.get('max_power', '') }}" required>
-
-
+                <div class="form-group">
+                    <label for="max_power">Max Power (in bhp):</label>
+                    <input type="number" id="max_power" name="max_power" min="1" max="99999" 
+                        placeholder="Enter max power" value="{{ selected_data.get('max_power', '') }}" required>
+                </div>
+            </div>
 
             <button type="submit">Predict</button>
 
@@ -211,7 +238,6 @@
 
     <script>
         window.onload = function() {
-            // Only scroll if selling_price is defined and not -1 
             {% if selling_price is defined and selling_price != -1 %}
                 window.scrollTo({
                     top: document.body.scrollHeight,
@@ -220,6 +246,5 @@
             {% endif %}
         }
     </script>
-    
 </body>
 </html>
