@@ -47,11 +47,11 @@ jobs:
     # - name: Push Docker Image
     #   run: docker push puskr99/car-price-a3:latest
 
-    - name: Set up SSH and Deploy to Server
+    - name: Set up SSH key, config, and known hosts
       run: |
-        # Set up SSH key and config
         mkdir -p ~/.ssh
         echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+        echo "${{ secrets.SSH_PRIVATE_KEY }}"
         chmod 600 ~/.ssh/id_rsa
         echo "
         Host bazooka
@@ -64,17 +64,23 @@ jobs:
           User st125098
           IdentityFile ~/.ssh/id_rsa
           ProxyJump bazooka
-          StrictHostKeyChecking no  # Disable strict host key checking
+          StrictHostKeyChecking no
           UserKnownHostsFile /dev/null  # Skip saving host key to known_hosts
         " > ~/.ssh/config
         chmod 600 ~/.ssh/config
 
+        # Add bazooka and ml2023 to known_hosts to bypass host key verification
+        ssh-keyscan -H bazooka.cs.ait.ac.th >> ~/.ssh/known_hosts
+        ssh-keyscan -H ml.brain.cs.ait.ac.th >> ~/.ssh/known_hosts
+        chmod 600 ~/.ssh/known_hosts
+
         # Deploy to the ml2023 server
-        ssh -o ProxyJump=bazooka ml2023 << 'EOF'
+        ssh -o ProxyJump=bazooka st125098@ml2023 << 'EOF'
         cd st125098/
         docker-compose down
         docker-compose pull
         docker-compose up -d
         EOF
+
 
  
