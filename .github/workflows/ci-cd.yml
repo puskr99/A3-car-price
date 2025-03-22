@@ -50,20 +50,20 @@ jobs:
     - name: Set up SSH key and config
       run: |
         mkdir -p ~/.ssh
-        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-        chmod 600 ~/.ssh/id_rsa
+        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/st125098
+        chmod 600 ~/.ssh/st125098
 
         # Add the SSH configuration to allow ProxyJump
         echo "
         Host bazooka
           HostName bazooka.cs.ait.ac.th
           User st125098
-          IdentityFile ~/.ssh/id_rsa
+          IdentityFile ~/.ssh/st125098
 
         Host ml2023
           HostName ml.brain.cs.ait.ac.th
           User st125098
-          IdentityFile ~/.ssh/id_rsa
+          IdentityFile ~/.ssh/st125098
           ProxyJump bazooka
           StrictHostKeyChecking no  # Disable host key checking
           UserKnownHostsFile /dev/null  # Skip saving host key to known_hosts
