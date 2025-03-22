@@ -55,15 +55,15 @@ jobs:
         echo "${{ secrets.SSH_CONFIG }}" > ~/.ssh/config
         chmod 600 ~/.ssh/config
 
-    # - name: Deploy to ml2023 Server
-    #   uses: appleboy/ssh-action@v0.1.8
-    #   with:
-    #     host: ml2023
-    #     username: st125098
-    #     port: 22
-    #     key: ${{ secrets.SSH_PRIVATE_KEY }}
-    #     script: |
-    #       cd st125098/
-    #       docker-compose down
-    #       docker-compose pull
-    #       docker-compose up -d
+    - name: Deploy to ml2023 Server
+      uses: appleboy/ssh-action@v0.1.8
+      with:
+        host: ml2023
+        username: st125098
+        port: 22
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        script: |
+          cd st125098/
+          docker-compose down
+          docker-compose pull
+          docker-compose up -d
