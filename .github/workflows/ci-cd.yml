@@ -26,8 +26,6 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r app/requirements.txt
 
-
-
   build-and-deploy:
     runs-on: ubuntu-latest
     needs: test
@@ -35,9 +33,7 @@ jobs:
     steps:
     - name: Checkout Code
       uses: actions/checkout@v3
-
-
-
+      
     - name: Set up SSH
           run: |
             mkdir -p ~/.ssh
