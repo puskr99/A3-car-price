@@ -152,15 +152,15 @@ def car_price_prediction_a1():
     if request.method == 'POST':
         form_datas = {
             "car_brand": car_brands[request.form.get("car_brand")],
-            "bought_year": request.form.get("bought_year"),
-            "km_driven": request.form.get("km_driven"),
+            "bought_year": 2025 - int(request.form.get("bought_year")),
+            "km_driven": int(request.form.get("km_driven")),
             # "fuel": fuel_encoded[fuel.index(request.form.get("fuel"))],
             # "seller": seller_type_encoded[seller_type.index(request.form.get("seller"))],
             # "transmission": transmission_encoded[transmission.index(request.form.get("transmission"))],
             # "owner": owner_mapping[request.form.get("owner")],
-            "mileage": request.form.get("mileage"),
-            "engine": request.form.get("engine"),
-            "max_power": request.form.get("max_power"),
+            "mileage": int(request.form.get("mileage")),
+            "engine": int(request.form.get("engine")),
+            "max_power": int(request.form.get("max_power")),
             # "seats": request.form.get("seats"),
         }
 
@@ -188,10 +188,15 @@ def get_predicted_selling_price(p_user_data):
 
     # scalar = StandardScaler()
     reshaped_array = np.array(list(p_user_data)).reshape(1, -1)
-    final_data = scaler_fit_model.transform(reshaped_array)
 
+    print("USer Data", list(p_user_data))
+    print("Reshaped array ", reshaped_array)
+
+    final_data = scaler_fit_model.transform(reshaped_array)
+    print("FInal data", final_data)
     try:
         selling_price = predictor.predict(final_data)
+        print("Selling price is ", selling_price)
         return selling_price[0]
     except:
         selling_price = -1
