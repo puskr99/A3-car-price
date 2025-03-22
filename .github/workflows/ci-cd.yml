@@ -64,6 +64,7 @@ jobs:
           User st125098
           IdentityFile ~/.ssh/id_rsa
           ProxyJump bazooka
+          StrictHostKeyChecking no  # Disable strict host key checking
         " > ~/.ssh/config
         chmod 600 ~/.ssh/config
 
@@ -74,4 +75,5 @@ jobs:
         docker-compose pull
         docker-compose up -d
         EOF
+
 
