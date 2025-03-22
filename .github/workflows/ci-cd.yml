@@ -16,15 +16,15 @@ jobs:
     - name: Checkout Code
       uses: actions/checkout@v3
 
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.10'
+    # - name: Set up Python
+    #   uses: actions/setup-python@v4
+    #   with:
+    #     python-version: '3.10'
 
-    - name: Install Dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r app/requirements.txt
+    # - name: Install Dependencies
+    #   run: |
+    #     python -m pip install --upgrade pip
+    #     pip install -r app/requirements.txt
 
     # - name: Run Tests
     #   run: |
@@ -52,7 +52,18 @@ jobs:
         mkdir -p ~/.ssh
         echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
-        echo "${{ secrets.SSH_CONFIG }}" > ~/.ssh/config
+        echo "
+        Host bazooka
+          HostName bazooka.cs.ait.ac.th
+          User st125098
+          IdentityFile ~/.ssh/id_rsa
+
+        Host ml2023
+          HostName ml.brain.cs.ait.ac.th
+          User st125098
+          IdentityFile ~/.ssh/id_rsa
+          ProxyJump bazooka
+        " > ~/.ssh/config
         chmod 600 ~/.ssh/config
 
     - name: Deploy to ml2023 Server
