@@ -65,14 +65,12 @@ jobs:
           User st125098
           IdentityFile ~/.ssh/st125098
           ProxyJump bazooka
-          StrictHostKeyChecking no
-          UserKnownHostsFile /dev/null
         EOF
         chmod 600 ~/.ssh/config
 
         # Add hosts to known_hosts with error handling
-        ssh-keyscan -p 43 -H bazooka.cs.ait.ac.th >> ~/.ssh/known_hosts 2>/dev/null || echo "Warning: Failed to scan bazooka host key"
-        ssh-keyscan -p 43 -H ml.brain.cs.ait.ac.th >> ~/.ssh/known_hosts 2>/dev/null || echo "Warning: Failed to scan ml2023 host key"
+        ssh-keyscan -p 22 -H bazooka.cs.ait.ac.th >> ~/.ssh/known_hosts 2>/dev/null || echo "Warning: Failed to scan bazooka host key"
+        ssh-keyscan -p 22 -H ml.brain.cs.ait.ac.th >> ~/.ssh/known_hosts 2>/dev/null || echo "Warning: Failed to scan ml2023 host key"
         chmod 600 ~/.ssh/known_hosts
 
     - name: SSH and Deploy to Server
