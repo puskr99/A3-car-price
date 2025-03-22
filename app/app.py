@@ -8,37 +8,37 @@ app = Flask(__name__)
 
 # Car brands for dropdown (not part of X, just for UI)
 car_brands = {
-    'Peugeot': 0.14007852592940906,
+    'Ambassador': 0.3047322318464338,
+    'Audi': 6.419528332051104,
+    'Ashok': 0.7372553996284688,
+    'BMW': 10.10019418174346,
+    'Chevrolet': 0.6746266312888017,
     'Opel': 0.16711122391578626,
     'Daewoo': 0.18922888590464032,
-    'Ambassador': 0.3047322318464338,
-    'Chevrolet': 0.6746266312888017,
+    'Force': 2.181047223900887,
     'Fiat': 0.7275820859091733,
-    'Ashok': 0.7372553996284688,
     'Datsun': 0.77313504898648,
-    'Tata': 0.8790769897667102,
     'Maruti': 0.9995529396157748,
+    'Tata': 0.8790769897667102,
     'Hyundai': 1.1364114165466455,
     'Renault': 1.1368929992882078,
     'Nissan': 1.1437469591017455,
+    'Peugeot': 0.14007852592940906,
     'Volkswagen': 1.225852218024429,
     'Ford': 1.269756744577325,
     'Honda': 1.4651182023021292,
     'Skoda': 1.493492106560972,
     'Mahindra': 1.5315843341426554,
     'Mitsubishi': 2.0090209639875773,
-    'Force': 2.181047223900887,
     'Toyota': 2.3590862296494572,
     'Kia': 3.697335829136771,
     'MG': 4.38257376445812,
     'Isuzu': 4.772499953594955,
     'Jeep': 5.282712320772742,
     'Mercedes-Benz': 6.071161687162731,
-    'Audi': 6.419528332051104,
     'Jaguar': 7.164807193065437,
     'Volvo': 8.041035571320949,
     'Land': 8.867544112197972,
-    'BMW': 10.10019418174346,
     'Lexus': 12.656217693622047
  }
 
@@ -53,10 +53,10 @@ mileage_range = [1, 999]
 
 # Load models and scaler
 with open("../app/model/car_price_predictor", "rb") as f:
-    predictor_a2 = cloudpickle.load(f)
+    predictor = cloudpickle.load(f)
 
 scaler_fit_model = joblib.load("./model/scaler.pkl")
-predictor_a1 = joblib.load("./model/A1-car_price_predictor")
+# predictor_a1 = joblib.load("./model/A1-car_price_predictor")
 
 @app.route("/")
 def index():
@@ -164,7 +164,7 @@ def car_price_prediction_a1():
             # "seats": request.form.get("seats"),
         }
 
-        pred_selling_price = get_predicted_selling_price_a1(form_datas.values())
+        pred_selling_price = get_predicted_selling_price(form_datas.values())
     
     return render_template(
         'index.html',
@@ -183,7 +183,7 @@ def car_price_prediction_a1():
     )
 
 
-def get_predicted_selling_price_a1(p_user_data):
+def get_predicted_selling_price(p_user_data):
     selling_price = -1
 
     # scalar = StandardScaler()
@@ -191,7 +191,7 @@ def get_predicted_selling_price_a1(p_user_data):
     final_data = scaler_fit_model.transform(reshaped_array)
 
     try:
-        selling_price = predictor_a2.predict(final_data)
+        selling_price = predictor.predict(final_data)
         return selling_price[0]
     except:
         selling_price = -1
