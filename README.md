@@ -6,3 +6,4 @@
 ---
 
 A new custom logistic regression model has been coded and implemented for the car price class prediction.It is the continuation from the model A2.
+The model is now live at:: https://st125098.ml.brain.cs.ait.ac.th/
