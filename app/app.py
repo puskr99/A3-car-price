@@ -3,6 +3,7 @@ import numpy as np
 import cloudpickle
 import joblib
 
+
 app = Flask(__name__)
 
 # Car brands for dropdown (not part of X, just for UI)
