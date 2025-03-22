@@ -53,7 +53,6 @@ jobs:
         echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/st125098
         chmod 600 ~/.ssh/st125098
 
-        # Add SSH configuration to allow ProxyJump
         cat << 'EOF' > ~/.ssh/config
         Host bazooka
           HostName bazooka.cs.ait.ac.th
@@ -70,14 +69,12 @@ jobs:
         EOF
         chmod 600 ~/.ssh/config
 
-        # Add hosts to known_hosts with error handling
+        # Only scan bazooka since ml2023 skips host key checking
         ssh-keyscan -p 22 -H bazooka.cs.ait.ac.th >> ~/.ssh/known_hosts 2>/dev/null || echo "Warning: Failed to scan bazooka host key"
-        ssh-keyscan -p 22 -H ml.brain.cs.ait.ac.th >> ~/.ssh/known_hosts 2>/dev/null || echo "Warning: Failed to scan ml2023 host key"
         chmod 600 ~/.ssh/known_hosts
 
     - name: SSH and Deploy to Server
       run: |
-        # Test SSH connection and deploy the app
         ssh -v st125098@ml2023 << 'EOF'
         cd st125098/ || { echo "Error: Directory st125098/ not found"; exit 1; }
         docker-compose down || { echo "Error: docker-compose down failed"; exit 1; }
