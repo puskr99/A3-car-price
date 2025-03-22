@@ -68,7 +68,7 @@ jobs:
 
     - name: Deploy to ml2023 Server
       run: |
-        ssh -o ProxyJump=bazooka ml2023 << 'EOF'
+        ssh -o ProxyJump=bazooka -o StrictHostKeyChecking=no ml2023 << 'EOF'
         cd st125098/
         docker-compose down
         docker-compose pull
