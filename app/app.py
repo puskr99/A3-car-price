@@ -143,7 +143,7 @@ def index():
 #         return -1
 
 
-@app.route('/a1', methods=['GET', 'POST'])
+@app.route('/a3', methods=['GET', 'POST'])
 def car_price_prediction_a1():
 
     form_datas = {}
