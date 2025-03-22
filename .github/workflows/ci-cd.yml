@@ -69,7 +69,7 @@ jobs:
     - name: Deploy to ml2023 Server
       uses: appleboy/ssh-action@v0.1.8
       with:
-        host: ml2023
+        host: ml.brain.cs.ait.ac.th
         username: st125098
         port: 22
         key: ${{ secrets.SSH_PRIVATE_KEY }}
