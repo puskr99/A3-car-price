@@ -67,14 +67,10 @@ jobs:
         chmod 600 ~/.ssh/config
 
     - name: Deploy to ml2023 Server
-      uses: appleboy/ssh-action@v0.1.8
-      with:
-        host: ml.brain.cs.ait.ac.th
-        username: st125098
-        port: 22
-        key: ${{ secrets.SSH_PRIVATE_KEY }}
-        script: |
-          cd st125098/
-          docker-compose down
-          docker-compose pull
-          docker-compose up -d
+      run: |
+        ssh -o ProxyJump=bazooka ml2023 << 'EOF'
+        cd st125098/
+        docker-compose down
+        docker-compose pull
+        docker-compose up -d
+        EOF
