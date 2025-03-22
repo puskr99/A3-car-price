@@ -75,9 +75,10 @@ jobs:
         chmod 600 ~/.ssh/config
 
         # Deploy to the ml2023 server with verbose output for debugging
-        ssh -v -tt ml2023 << 'EOF'
+        ssh -vvv -tt ml2023 << 'EOF'
         cd st125098/
         docker-compose down
         docker-compose pull
         docker-compose up -d
         EOF
+ 
