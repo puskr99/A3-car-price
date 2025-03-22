@@ -65,6 +65,8 @@ jobs:
           User st125098
           IdentityFile ~/.ssh/st125098
           ProxyJump bazooka
+          StrictHostKeyChecking no
+          UserKnownHostsFile /dev/null
         EOF
         chmod 600 ~/.ssh/config
 
