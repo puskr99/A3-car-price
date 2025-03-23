@@ -4,9 +4,6 @@ on:
   push:
     branches:
       - test
-  pull_request:
-    branches:
-      - test
 
 jobs:
   test:
@@ -16,19 +13,19 @@ jobs:
     - name: Checkout Code
       uses: actions/checkout@v3
 
-    # - name: Set up Python
-    #   uses: actions/setup-python@v4
-    #   with:
-    #     python-version: '3.10'
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
 
-    # - name: Install Dependencies
-    #   run: |
-    #     python -m pip install --upgrade pip
-    #     pip install -r app/requirements.txt
+    - name: Install Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r app/requirements.txt
 
-    # - name: Run Tests
-    #   run: |
-    #     pytest
+    - name: Run Tests
+      run: |
+        pytest
 
   build-and-deploy:
     runs-on: ubuntu-latest
@@ -38,14 +35,14 @@ jobs:
     - name: Checkout Code
       uses: actions/checkout@v3
 
-    # - name: Log in to Docker Hub
-    #   run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+    - name: Log in to Docker Hub
+      run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
-    # - name: Build Docker Image
-    #   run: docker build -t puskr99/car-price-a3:latest .
+    - name: Build Docker Image
+      run: docker build -t puskr99/car-price-a3:latest .
 
-    # - name: Push Docker Image
-    #   run: docker push puskr99/car-price-a3:latest
+    - name: Push Docker Image
+      run: docker push puskr99/car-price-a3:latest
 
     - name: Set up SSH key and config
       run: |
@@ -77,8 +74,8 @@ jobs:
       run: |
         ssh -v st125098@ml2023 << 'EOF'
         cd st125098/ || { echo "Error: Directory st125098/ not found"; exit 1; }
-        docker compose down || { echo "Error: docker-compose down failed"; exit 1; }
-        docker compose pull || { echo "Error: docker-compose pull failed"; exit 1; }
-        docker compose up -d || { echo "Error: docker-compose up failed"; exit 1; }
+        docker compose down || { echo "Error: docker compose down failed"; exit 1; }
+        docker compose pull || { echo "Error: docker compose pull failed"; exit 1; }
+        docker compose up -d || { echo "Error: docker compose up failed"; exit 1; }
         echo "Deployment completed successfully"
         EOF
