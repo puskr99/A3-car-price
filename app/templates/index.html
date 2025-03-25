@@ -224,10 +224,12 @@
                 {% if selling_price is defined %}
                     {% if selling_price != -1 %}
                         <p><strong>The predicted price class is: {{ selling_price }}</strong></p>
-                        <p><strong>0 -> Cheap</strong></p>
-                        <p><strong>1 -> Affordable</strong></p>
-                        <p><strong>2 -> Expensive</strong></p>
-                        <p><strong>3 -> Luxury</strong></p>
+                        <hr>
+                        <p><strong>0 : Cheap</strong></p>
+                        <p><strong>1 : Affordable</strong></p>
+                        <p><strong>2 : Expensive</strong></p>
+                        <p><strong>3 : Luxury</strong></p>
+                        <hr>
                     {% else %}
                         <p><strong>Couldn't predict the price class. Please try again.</strong></p>
                     {% endif %}
