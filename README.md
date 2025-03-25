@@ -11,4 +11,4 @@ The model is now live at: https://st125098.ml.brain.cs.ait.ac.th/
 
 *The screenshot of the model in the mlflow-mlbrain server:*
 
-![image](screenshots/mlflow.png)
+![image](screenshots/ml_staging.png)
