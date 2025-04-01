@@ -33,8 +33,9 @@ def test_input():
     try:
         data = scaler_model.fit_transform(test)
         predicted_value = model_mlflow.predict(data)
+        print("Predicted valuee is", predicted_value)
     except:
-        assert(False, "Shape is incorrect.")
+        assert(False, "Input shape is incorrect. Try again..")
 
 
 def test_predicted_shape():

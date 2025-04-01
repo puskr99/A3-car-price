@@ -9,7 +9,7 @@ on:
       - main
 
 jobs:
-  fetch-mlflow-server-model-and-test:
+  fetch-mlflow-model-and-test:
     runs-on: ubuntu-latest
 
     steps:
